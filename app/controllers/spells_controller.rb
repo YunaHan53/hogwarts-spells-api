@@ -1,5 +1,7 @@
-class SpellsController < ApplicationController
-  before_action :set_spell, only: [:show, :update, :destroy]
+# frozen_string_literal: true
+
+class SpellsController < ProtectedController
+  before_action :set_spell, only: %i[show update destroy]
 
   # GET /spells
   def index
@@ -15,7 +17,7 @@ class SpellsController < ApplicationController
 
   # POST /spells
   def create
-    @spell = Spell.new(spell_params)
+    @spell = current_user.spells.build(spell_params)
 
     if @spell.save
       render json: @spell, status: :created, location: @spell
@@ -39,13 +41,14 @@ class SpellsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_spell
-      @spell = Spell.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def spell_params
-      params.require(:spell).permit(:name, :type, :description, :fatality)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_spell
+    @spell = Spell.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def spell_params
+    params.require(:spell).permit(:name, :type, :description, :fatality)
+  end
 end
