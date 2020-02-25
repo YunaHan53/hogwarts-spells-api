@@ -102,3 +102,77 @@ RSpec.describe 'Authentication API' do
     end
   end
 end
+
+RSpec.describe 'Users API' do
+  def user_params
+    {
+      email: 'alice@example.com',
+      password: 'foobarbaz',
+      password_confirmation: 'foobarbaz'
+    }
+  end
+
+  after(:each) do
+    User.delete_all
+  end
+
+  context 'when authenticated' do
+    def headers
+      {
+        'HTTP_AUTHORIZATION' => "Token token=#{@token}"
+      }
+    end
+
+    before(:each) do
+      post '/sign-up', params: { credentials: user_params }
+      post '/sign-in', params: { credentials: user_params }
+
+      @token = JSON.parse(response.body)['user']['token']
+      @user_id = JSON.parse(response.body)['user']['id']
+    end
+
+    describe 'GET /users' do
+      it 'is successful' do
+        get '/users', headers: headers
+
+        expect(response).to be_success
+
+        parsed_response = JSON.parse(response.body)
+        expect(
+          parsed_response['users']
+        ).not_to be_empty
+      end
+    end
+
+    describe 'GET /users/:id' do
+      it 'is successful' do
+        get "/users/#{@user_id}", headers: headers
+
+        expect(response).to be_success
+
+        parsed_response = JSON.parse(response.body)
+        expect(
+          parsed_response['user']
+        ).not_to be_empty
+      end
+    end
+  end
+
+  context 'when not authenticated' do
+    describe 'GET /users' do
+      it 'is not successful' do
+        get '/users'
+
+        expect(response).not_to be_success
+      end
+    end
+
+    describe 'GET /users/:id' do
+      it 'is not successful' do
+        get "/users/#{@user_id}"
+
+        expect(response).not_to be_success
+      end
+    end
+  end
+end

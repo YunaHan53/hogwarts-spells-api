@@ -6,9 +6,9 @@ curl "http://localhost:4741/spells" \
   --header "Content-Type: application/json" \
   --header "Authorization: Token token=${TOKEN}" \
   --data '{
-    "spells": {
+    "spell": {
       "name": "'"${NAME}"'",
-      "type": "'"${TYPE}"'",
+      "category": "'"${TYPE}"'",
       "description": "'"${DESCRIPTION}"'",
       "fatality": "'"${FATALITY}"'"
     }

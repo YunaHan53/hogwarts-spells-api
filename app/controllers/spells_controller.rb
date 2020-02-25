@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SpellsController < ProtectedController
+class SpellsController < OpenReadController
   before_action :set_spell, only: %i[show update destroy]
 
   # GET /spells
@@ -49,6 +49,6 @@ class SpellsController < ProtectedController
 
   # Only allow a trusted parameter "white list" through.
   def spell_params
-    params.require(:spell).permit(:name, :type, :description, :fatality)
+    params.require(:spell).permit(:name, :category, :description, :fatality)
   end
 end

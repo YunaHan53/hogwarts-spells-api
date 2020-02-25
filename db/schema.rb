@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 2020_02_24_203051) do
   end
 
   create_table "spells", force: :cascade do |t|
-    t.string "name"
-    t.string "type"
+    t.string "name", null: false
+    t.string "category", null: false
     t.string "description"
     t.boolean "fatality"
     t.datetime "created_at", null: false
