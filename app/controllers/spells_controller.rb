@@ -44,7 +44,7 @@ class SpellsController < OpenReadController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_spell
-    @spell = Spell.find(params[:id])
+    @spell = current_user.spells.find(params[:id])
   end
 
   # Only allow a trusted parameter "white list" through.
